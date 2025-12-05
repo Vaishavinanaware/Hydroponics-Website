@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>HydroGrow — Hydroponics Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#1B4332;
+    --mint:#74C69D;
+    --bg:#E8F5E9;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background: linear-gradient(180deg,#f0fbf3 0%, var(--bg) 100%);
+    color:var(--green);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* NAV */
+  nav{
+    position:sticky;
+    top:0;
+    z-index:20;
+    background:rgba(27,67,50,0.98);
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    padding:12px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.08);
+  }
+  nav button{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.12);
+    color:#fff;
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  nav button:hover{ background:var(--mint); color:#fff; border-color:transparent; transform:translateY(-2px); }
+
+  /* Layout */
+  .container{ max-width:1100px; margin:26px auto; padding:0 18px; }
+  .hero{
+    display:flex;
+    gap:20px;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    margin-bottom:20px;
+  }
+  .hero .intro{
+    flex:1 1 360px;
+    min-width:260px;
+  }
+  .hero h1{ font-size:36px; margin:0 0 8px; color:var(--green); }
+  .hero p{ margin:0 0 16px; color:#2d6a4f; line-height:1.5; }
+  .hero .cta{ display:flex; gap:10px; flex-wrap:wrap; }
+
+  .btn {
+    background:var(--green); color:#fff; padding:12px 18px; border-radius:10px; border:none; cursor:pointer; font-weight:600;
+  }
+  .btn.secondary{ background:#fff; color:var(--green); border:1px solid var(--mint); }
+
+  .images{
+    flex:1 1 360px;
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .images img{ width:100%; max-width:320px; border-radius:16px; box-shadow:0 8px 30px rgba(0,0,0,0.12); }
+
+  /* Card */
+  .card{
+    background:var(--card);
+    border-radius:14px;
+    padding:18px;
+    box-shadow:0 6px 22px rgba(0,0,0,0.06);
+    margin-bottom:18px;
+  }
+  h2{ color:var(--green); margin:0 0 10px; }
+
+  /* forms */
+  input, select, textarea{ width:100%; padding:10px 12px; border-radius:10px; border:1px solid #dfeee3; margin-top:8px; }
+  label{ font-size:14px; color:#2d6a4f; }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap:16px;
+  }
+
+  .result{ margin-top:10px; font-weight:700; color:var(--green); }
+
+  /* gallery */
+  .gallery{ display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .vegcard{ width:180px; background:#fff; border-radius:12px; padding:8px; text-align:center; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+  .vegcard img{ width:100%; border-radius:8px; }
+
+  footer{ text-align:center; padding:20px 10px; color:#2d6a4f; }
+
+  /* responsive */
+  @media(max-width:720px){
+    .hero{ flex-direction:column-reverse; align-items:flex-start; }
+    .images img{ max-width:46vw; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <button onclick="openTab('home')">Home</button>
+  <button onclick="openTab('about')">About Us</button>
+  <button onclick="openTab('tools')">Tools</button>
+  <button onclick="openTab('diagnosis')">Diagnosis</button>
+  <button onclick="openTab('farms')">Farms</button>
+  <button onclick="openTab('contact')">Contact</button>
+</nav>
+
+<div class="container">
+
+  <!-- HOME -->
+  <section id="home" class="tab">
+    <div class="hero">
+      <div class="intro">
+        <h1>HydroGrow — Hydroponics Made Easy</h1>
+        <p>Grow fresh, healthy vegetables at home using clean, soil-free hydroponic systems. Use our smart tools (pH, TDS, temperature guides), get nutrient advice, and find nearby farms.</p>
+        <div class="cta">
+          <button class="btn" onclick="openTab('tools')">Explore Tools</button>
+          <button class="btn secondary" onclick="openTab('diagnosis')">Upload Plant Photo</button>
+        </div>
+      </div>
+
+      <div class="images">
+        <img src="c:\Users\User\Pictures\Screenshots\Screenshot 2025-09-13 105536.png" alt="hydroponics-1">
+        <img src="c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-02 214705.png" alt="hydroponics-2">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Find Hydroponic Farms Near You</h2>
+      <div style="max-width:700px; margin:auto;">
+        <label>Search city (example: pune, mumbai, nashik)</label>
+        <input id="citySearchInput" placeholder="Enter city name..." />
+        <button class="btn" style="margin-top:8px;" onclick="lookupCity()">Search Farms</button>
+        <div id="cityResult" class="result"></div>
+        <div id="cityDetails" style="margin-top:12px;"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Popular Vegetables & Fruits (Hydroponic)</h2>
+      <div class="gallery" id="vegGallery">
+        <!-- Veg cards inserted by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="tab" style="display:none;">
+    <div class="card">
+      <h1>About Us</h1>
+      <img src="c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-02 214649.png" alt="about" style="margin-top:10px;">
+      <p style="margin-top:12px; font-weight:600;">
+        We provide complete hydroponic guidance—from choosing the right crops to maintaining perfect nutrient balance. Our platform offers smart tools such as pH and TDS calculators, temperature guides, nutrient deficiency detection, and city-wise hydroponic farm information.
+      </p>
+      <p>We aim to help beginners as well as professional growers achieve healthy, high-yield and chemical-free crops using modern soilless farming techniques. With simple explanations and accurate tools, we make hydroponic gardening easy, cost-effective, and efficient.</p>
+      <p><strong>Start your hydroponic journey with us—grow fresh vegetables anytime, anywhere with expert support!</strong></p>
+    </div>
+
+    <div class="card">
+      <h2>Popular Hydroponic Crops — Info & Ideal Conditions</h2>
+      <div class="grid">
+        <div>
+          <h3>Lettuce</h3>
+          <p>pH: 5.5–6.2 • Temp: 18–22°C • Notes: Fast growing, ideal for NFT/DWC</p>
+        </div>
+        <div>
+          <h3>Basil</h3>
+          <p>pH: 5.5–6.2 • Temp: 20–25°C • Notes: Prefers warm, aromatic herb</p>
+        </div>
+        <div>
+          <h3>Tomato</h3>
+          <p>pH: 5.5–6.5 • Temp: 20–26°C • Notes: Needs support, higher nutrients</p>
+        </div>
+        <div>
+          <h3>Strawberry</h3>
+          <p>pH: 5.5–6.0 • Temp: 18–22°C • Notes: High light, cool nights</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section id="tools" class="tab" style="display:none;">
+    <div class="card">
+      <h1>Tools — pH & TDS Calculators</h1>
+
+      <div style="margin-top:8px;">
+        <h2>TDS (Nutrient) Calculator</h2>
+        <label>Water volume (liters)</label>
+        <input id="tdsWater" type="number" placeholder="e.g., 10">
+        <label>Current TDS (ppm)</label>
+        <input id="tdsCurrent" type="number" placeholder="e.g., 200">
+        <label>Target TDS (ppm)</label>
+        <input id="tdsTarget" type="number" placeholder="e.g., 800">
+        <button class="btn" onclick="calculateTDS()">Calculate TDS</button>
+        <div id="tdsOutput" class="result"></div>
+        <small style="color:#366b4a; display:block; margin-top:8px;">Note: Result is approximation — follow your nutrient product instructions for concentration.</small>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>pH Down / Up Estimator</h2>
+      <label>Current pH</label>
+      <input id="phNow" type="number" step="0.1" placeholder="e.g., 7.2">
+      <label>Target pH</label>
+      <input id="phTarget" type="number" step="0.1" placeholder="e.g., 5.8">
+      <label>Water volume (liters)</label>
+      <input id="phWater" type="number" placeholder="e.g., 10">
+      <button class="btn" onclick="calculatePH()">Estimate pH Drops</button>
+      <div id="phOutput" class="result"></div>
+      <small style="color:#366b4a; display:block; margin-top:8px;">This is an estimate. Use a proper pH solution and meter for precise adjustments.</small>
+    </div>
+  </section>
+
+  <!-- DIAGNOSIS -->
+  <section id="diagnosis" class="tab" style="display:none;">
+    <div class="card">
+      <h1>Plant Nutrient Diagnosis</h1>
+      <p>Upload a clear photo of the affected leaf or plant. Our rule-based diagnosis will suggest possible nutrient issues & fixes.</p>
+      <input id="plantFile" type="file" accept="image/*">
+      <button class="btn" style="margin-top:10px;" onclick="analyzePlant()">Analyze Photo</button>
+      <div id="diagnosisResult" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="card">
+      <h2>Full Nutrient Deficiency Reference</h2>
+      <ul>
+        <li><b>Nitrogen (N):</b> Pale/light green leaves, lower leaves yellow → Add nitrogen source (e.g., Calcium Nitrate)</li>
+        <li><b>Phosphorus (P):</b> Dark/ purple tinge on leaves, poor growth → Add MKP</li>
+        <li><b>Potassium (K):</b> Brown edges/tip burn → Potassium Sulphate</li>
+        <li><b>Calcium (Ca):</b> Deformed new leaves / tip burn → Calcium Nitrate</li>
+        <li><b>Magnesium (Mg):</b> Interveinal yellowing → Epsom salt (MgSO₄)</li>
+        <li><b>Iron (Fe):</b> New leaves yellow with green veins → Iron chelate</li>
+        <li><b>Micronutrients (Zn, Mn, B, Cu, Mo):</b> Stunting, spots, poor fruit set → Use a complete micronutrient mix</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FARMS -->
+  <section id="farms" class="tab" style="display:none;">
+    <div class="card">
+      <h1>Farms & Maps</h1>
+      <p>Search by city — we show a photo, short info and an embedded map (Google Maps).</p>
+
+      <label>City name</label>
+      <input id="farmCityInput" placeholder="e.g., pune">
+      <button class="btn" onclick="showFarm()">Show Farm</button>
+
+      <div id="farmShow" style="margin-top:12px;"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="tab" style="display:none;">
+    <div class="card">
+      <h1>Contact Us</h1>
+      <p><b>Phone:</b> +91 98765 43210</p>
+      <p><b>Email:</b> hydro.grow.help@gmail.com</p>
+      <p><b>Address:</b> Maharashtra, India</p>
+      <p>If you want your farm listed here, email us with details and photos.</p>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 HydroGrow — Grow Smart. Grow Fresh. Grow Hydroponic.
+  </footer>
+</div>
+
+<script>
+/* Default show */
+function openTab(id){
+  document.querySelectorAll('.tab').forEach(s=>s.style.display='none');
+  document.getElementById(id).style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* Vegetables gallery data */
+/* Vegetables gallery data */
+const vegs = [
+  {
+    name:"Lettuce",
+    img:"c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-03 145556.png",
+    info:"Fast leafy green, ideal for NFT/DWC."
+  },
+  {
+    name:"Basil",
+    img:"c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-03 145646.png",
+    info:"Aromatic herb, loves warm temps."
+  },
+  {
+    name:"Tomato",
+    img:"c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-03 145628.png",
+    info:"Fruit crop, requires support and more nutrients."
+  },
+  {
+    name:"Strawberry",
+    img:"c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-03 145611.png",
+    info:"High light requirement, cool nights preferred."
+  },
+  {
+    name:"Spinach",
+    img:"c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-03 150123.png",
+    info:"Leafy green, tolerant of slightly higher pH."
+  }
+];
+
+const galleryEl = document.getElementById('vegGallery');
+vegs.forEach(v=>{
+  const d = document.createElement('div'); d.className='vegcard';
+  d.innerHTML = `<img src="${v.img}" alt="${v.name}"><h4 style="margin:8px 0 4px">${v.name}</h4><small style="color:#2d6a4f">${v.info}</small>`;
+  galleryEl.appendChild(d);
+});
+
+/* Simple farms database */
+const farmDB = {
+  pune: {
+    name:"Urban Greens (Pune)",
+    img:"c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-02 231031.png",
+    info:"Multiple commercial and rooftop hydroponic farms. Good for leafy greens & microgreens.",
+    mapIframe: `<iframe src="https://www.google.com/maps?q=Pune+India&output=embed" width="100%" height="300" style="border:0;border-radius:10px"></iframe>`
+  },
+  mumbai: {
+    name:"Hydrobloom (Mumbai)",
+    img:"c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-03 214931.png",
+    info:"Urban rooftop and commercial hydroponic setups using NFT and DWC.",
+    mapIframe: `<iframe src="https://www.google.com/maps?q=Mumbai+India&output=embed" width="100%" height="300" style="border:0;border-radius:10px"></iframe>`
+  },
+  nashik: {
+    name:"Nashik Hydro Farms",
+    img:"c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-03 145751.png",
+    info:"Strawberry and vegetable growers using greenhouse hydroponics.",
+    mapIframe: `<iframe src="https://www.google.com/maps?q=Nashik+India&output=embed" width="100%" height="300" style="border:0;border-radius:10px"></iframe>`
+  },
+  nagpur: {
+    name:"Nagpur Greenhouses",
+    img:"c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-03 150338.png",
+    info:"Greenhouse hydroponic operations focused on year-round production.",
+    mapIframe: `<iframe src="https://www.google.com/maps?q=Nagpur+India&output=embed" width="100%" height="300" style="border:0;border-radius:10px"></iframe>`
+  },
+  kolhapur: {
+    name:"Kolhapur Hydro",
+    img:"c:\Users\User\Pictures\Screenshots\Screenshot 2025-12-03 145751.png",
+    info:"Local growers producing leafy greens and herbs for local markets.",
+    mapIframe: `<iframe src="https://www.google.com/maps?q=Kolhapur+India&output=embed" width="100%" height="300" style="border:0;border-radius:10px"></iframe>`
+  }
+};
+
+/* Search on HOME quick lookup */
+function lookupCity(){
+  const key = (document.getElementById('citySearchInput').value||'').trim().toLowerCase();
+  const res = document.getElementById('cityResult');
+  const det = document.getElementById('cityDetails');
+  if(!key){ res.innerText='Enter a city name'; det.innerHTML=''; return; }
+  if(farmDB[key]){
+    res.innerText='Farms found ✔';
+    det.innerHTML = `<div class="card">
+      <h3>${farmDB[key].name}</h3>
+      <img src="${farmDB[key].img}" alt="${farmDB[key].name}">
+      <p style="margin-top:8px">${farmDB[key].info}</p>
+      ${farmDB[key].mapIframe}
+    </div>`;
+  } else {
+    res.innerText='No farms found ❌';
+    det.innerHTML='';
+  }
+}
+
+/* FARMS page show */
+function showFarm(){
+  const key = (document.getElementById('farmCityInput').value||'').trim().toLowerCase();
+  const out = document.getElementById('farmShow');
+  if(!key){ out.innerHTML = '<p class="result">Enter a city name</p>'; return; }
+  if(farmDB[key]){
+    out.innerHTML = `<div class="card"><h3>${farmDB[key].name}</h3>
+      <img src="${farmDB[key].img}" alt="${farmDB[key].name}">
+      <p style="margin-top:8px">${farmDB[key].info}</p>
+      ${farmDB[key].mapIframe}
+    </div>`;
+  } else {
+    out.innerHTML = `<p class="result">No farms found for "${key}"</p>`;
+  }
+}
+
+/* TDS calculator: (approx) grams of nutrient to add
+   Formula used: grams = (targetppm - currentppm) * liters * 0.001
+   (simple approximation) */
+function calculateTDS(){
+  const w = parseFloat(document.getElementById('tdsWater').value);
+  const c = parseFloat(document.getElementById('tdsCurrent').value);
+  const t = parseFloat(document.getElementById('tdsTarget').value);
+  const out = document.getElementById('tdsOutput');
+  if(!w || isNaN(c) || isNaN(t) || t<=c){ out.innerText='Enter valid values (target > current).'; return; }
+  const grams = (t - c) * w * 0.001;
+  out.innerText = `Approx add ${grams.toFixed(2)} grams of concentrated nutrients (approx).`;
+}
+
+/* pH estimator: very rough
+   drops = (current-target) * (volume_liters * factor)
+   factor chosen small (0.5) for general diluted solutions */
+function calculatePH(){
+  const cur = parseFloat(document.getElementById('phNow').value);
+  const tar = parseFloat(document.getElementById('phTarget').value);
+  const w = parseFloat(document.getElementById('phWater').value);
+  const out = document.getElementById('phOutput');
+  if(!w || isNaN(cur) || isNaN(tar) || cur<=tar){ out.innerText='Enter valid values (current > target).'; return; }
+  const drops = (cur - tar) * (w * 0.5);
+  out.innerText = `Estimate: Add ${drops.toFixed(0)} drops of pH Down (approx).`;
+}
+
+/* Simple rule-based plant analysis by color/filename (NOTE: offline rule-based only)
+   For best results, you can integrate a cloud vision/ML model later. */
+function analyzePlant(){
+  const file = document.getElementById('plantFile').files[0];
+  const out = document.getElementById('diagnosisResult');
+  if(!file){ out.innerHTML = '<p class="result">Please upload a plant photo.</p>'; return; }
+
+  // Show preview
+  const reader = new FileReader();
+  reader.onload = function(e){
+    out.innerHTML = `<div style="display:flex; gap:12px; align-items:flex-start;">
+      <img src="${e.target.result}" style="width:180px; border-radius:10px; box-shadow:0 6px 18px rgba(0,0,0,0.08)">
+      <div>
+        <h3>Possible issues (rule-based)</h3>
+        <ul>
+          <li><b>Light green / overall yellowing:</b> Nitrogen deficiency — add N source (Calcium Nitrate).</li>
+          <li><b>Brown edges / tip burn:</b> Potassium deficiency — add K supplement (Potassium Sulphate).</li>
+          <li><b>New leaves deformed / tip burn:</b> Calcium deficiency — add Calcium Nitrate & check pH.</li>
+          <li><b>Interveinal yellowing:</b> Magnesium deficiency — add Epsom salt (MgSO₄).</li>
+          <li><b>New leaves yellow, green veins:</b> Iron deficiency — use iron chelate (Fe-EDDHA/EDTA).</li>
+        </ul>
+        <p style="margin-top:6px;"><b>Tip:</b> After adjustments re-check pH (5.5–6.5 depending on crop) and TDS/EC. Maintain nutrient water temp 18–22°C for best root health.</p>
+      </div>
+    </div>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* show home by default */
+openTab('home');
+</script>
+
+</body>
+</html>
